@@ -433,6 +433,19 @@ function Index() {
     }
   }, []);
 
+  // Auto-show Sign Up modal on first visit per session
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem("lmh_visited");
+    if (!hasVisited) {
+      const timer = setTimeout(() => {
+        setAuthTab("signup");
+        setShowAuthModal(true);
+        sessionStorage.setItem("lmh_visited", "true");
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   // Hero auto-slideshow
   useEffect(() => {
     const interval = setInterval(() => {
