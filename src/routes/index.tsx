@@ -1669,7 +1669,7 @@ function Index() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="https://www.youtube.com/watch?v=owoqcEEa6k0"
+                href="https://youtube.com/@lookmyholidays7631?si=SuYkSXD-YWH-Xz0r"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"

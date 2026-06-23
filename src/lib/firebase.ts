@@ -2,12 +2,12 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCKNkXEsg4CykGfayfvC9NB80eo_8fh4wA",
-  authDomain: "custom-oasis-454718-j6.firebaseapp.com",
-  projectId: "custom-oasis-454718-j6",
-  storageBucket: "custom-oasis-454718-j6.firebasestorage.app",
-  messagingSenderId: "751151095052",
-  appId: "1:751151095052:web:7ddd897fe7d09a89713d29"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase (SSR-safe check to prevent duplicate app initialization)
