@@ -69,3 +69,29 @@ drop policy if exists "Allow read access" on public.newsletter_subscriptions;
 create policy "Allow read access" on public.newsletter_subscriptions 
   for select 
   using (true);
+
+-- 4. Create general_inquiries table (For the main Contact Us section)
+create table if not exists public.general_inquiries (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  name text not null,
+  phone text not null,
+  email text not null,
+  destination text,
+  travel_date date,
+  message text
+);
+
+-- Enable RLS
+alter table public.general_inquiries enable row level security;
+
+-- RLS Policies for general_inquiries
+drop policy if exists "Allow public inserts" on public.general_inquiries;
+create policy "Allow public inserts" on public.general_inquiries 
+  for insert 
+  with check (true);
+
+drop policy if exists "Allow read access" on public.general_inquiries;
+create policy "Allow read access" on public.general_inquiries 
+  for select 
+  using (true);

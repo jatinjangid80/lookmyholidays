@@ -187,45 +187,8 @@
   animation: fade-up 0.7s ease forwards;
 }
 
-.hero-grad {
-  background: oklch(0 0 0);
-  overflow: hidden;
-}
-
-.hero-slide {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: opacity 1.2s ease-in-out;
-  opacity: 0;
-}
-
-.hero-slide::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, oklch(0 0 0 / 0.15) 0%, oklch(0 0 0 / 0.68) 100%);
-}
-
-.hero-slide.active {
-  opacity: 1;
-}
-
-.hero-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: oklch(1 0 0 / 0.45);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
-  flex-shrink: 0;
-}
-.hero-dot.active {
-  background: oklch(1 0 0 / 0.95);
-  transform: scale(1.35);
-  width: 22px;
-  border-radius: 4px;
+@keyframes shine {
+  100% {
+    transform: translateX(100%) skewX(12deg);
+  }
 }

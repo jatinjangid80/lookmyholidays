@@ -39,3 +39,6 @@ dist-ssr
 .firebase/
 .vercel
 .env*
+test_key.js
+test_supabase.cjs
+test_auth.cjs

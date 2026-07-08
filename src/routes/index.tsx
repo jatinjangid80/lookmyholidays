@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { hasSupabaseConfig, supabase } from "../lib/supabase";
+import { Hero } from "../components/sections/Hero";
+import { Destinations } from "../components/sections/Destinations";
+import { Statistics } from "../components/sections/Statistics";
+import { Testimonials } from "../components/sections/Testimonials";
+import { VisaServices } from "../components/sections/VisaServices";
+import { Footer } from "../components/sections/Footer";
+import { TrendingPackages } from "../components/sections/TrendingPackages";
 import {
   Mail,
   Lock,
@@ -429,7 +436,7 @@ function Index() {
         setAuthEmail(email || "");
         setAuthPassword(password || "");
         setRememberMe(true);
-      } catch {}
+      } catch { }
     }
   }, []);
 
@@ -639,19 +646,19 @@ function Index() {
 
   const displayedDestinations = searchQuery
     ? dbDestinations.filter(
-        (d) =>
-          d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.country.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+      (d) =>
+        d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        d.country.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
     : dbDestinations;
 
   const displayedPackages = searchQuery
     ? dbPackages.filter(
-        (p) =>
-          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.tag.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.incl.some((i: string) => i.toLowerCase().includes(searchQuery.toLowerCase())),
-      )
+      (p) =>
+        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.tag.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.incl.some((i: string) => i.toLowerCase().includes(searchQuery.toLowerCase())),
+    )
     : dbPackages;
 
   // Handle Auth Form Submission
@@ -757,16 +764,21 @@ function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header
-        className={`sticky top-0 z-40 transition-all ${scrolled ? "bg-white/95 backdrop-blur shadow-sm" : "bg-white"}`}
-      >
-        <nav className="mx-auto max-w-7xl px-4 py-1.5 flex items-center justify-between">
-          <a href="#home" onClick={scrollTo("home")} className="flex items-center">
-            <img
-              src="/logo.png"
-              alt="LookMyHolidays"
-              className="h-14 md:h-18 w-auto object-contain"
-            />
+      <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+        <header
+          className={`pointer-events-auto transition-all duration-500 w-full max-w-7xl rounded-full border ${
+            scrolled
+              ? "bg-white/80 backdrop-blur-lg shadow-lg border-white/20 py-2 px-6"
+              : "bg-white/90 backdrop-blur-md shadow-sm border-white/20 py-3 px-6"
+          }`}
+        >
+          <nav className="flex items-center justify-between">
+            <a href="#home" onClick={scrollTo("home")} className="flex items-center">
+              <img
+                src="/logo.png"
+                alt="LookMyHolidays"
+                className="h-12 md:h-16 w-auto object-contain transition-all duration-300"
+              />
           </a>
           <ul className="hidden lg:flex items-center gap-8 text-sm font-medium">
             {[
@@ -959,307 +971,41 @@ function Index() {
             </ul>
           </div>
         )}
-      </header>
+        </header>
+      </div>
 
       {/* Hero */}
-      <section
-        id="home"
-        className="relative hero-grad min-h-[88vh] flex items-center"
-        onMouseEnter={() => {
-          heroPaused.current = true;
-        }}
-        onMouseLeave={() => {
-          heroPaused.current = false;
-        }}
-      >
-        {/* Background Slides */}
-        {heroSlides.map((slide, i) => (
-          <div
-            key={slide.img}
-            className={`hero-slide${i === heroSlide ? " active" : ""}`}
-            style={{ backgroundImage: `url('${slide.img}')` }}
-            aria-hidden="true"
-          />
-        ))}
-
-        {/* Content (above slides via z-index) */}
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 w-full text-white">
-          <div className="max-w-3xl reveal">
-            <span className="inline-block bg-primary/90 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase mb-5">
-              ✈ Trusted by 12,000+ travellers
-            </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-6">
-              Find Your Perfect <span className="text-primary">Holiday</span> Package Today.
-            </h1>
-            <p className="text-lg md:text-xl text-white/85 max-w-2xl mb-8">
-              Customized tour packages, smooth visa support, and a 24/7 concierge — crafted by
-              people who actually travel.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#packages"
-                onClick={scrollTo("packages")}
-                className="bg-primary hover:bg-[var(--primary-dark)] text-primary-foreground font-semibold px-7 py-3.5 rounded-full transition-colors shadow-[var(--shadow-elegant)]"
-              >
-                Explore Packages
-              </a>
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  selectBookingCustom();
-                }}
-                className="bg-white/10 backdrop-blur border border-white/30 hover:bg-white/20 text-white font-semibold px-7 py-3.5 rounded-full transition-colors"
-              >
-                Get a Quote
-              </a>
-            </div>
-          </div>
-
-          {/* Search card */}
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const form = e.currentTarget;
-              const fd = new FormData(form);
-              const destination = fd.get("destination") as string;
-              if (!destination) return;
-
-              showToast("Searching curated trips…");
-              setSearchQuery(destination);
-
-              // Scroll down to see matching results
-              const el = document.getElementById("destinations");
-              if (el) window.scrollTo({ top: el.offsetTop - 85, behavior: "smooth" });
-
-              try {
-                // Save search history
-                await supabase.from("searches").insert([
-                  {
-                    destination,
-                    check_in: fd.get("check_in") ? (fd.get("check_in") as string) : null,
-                    travellers: fd.get("travellers") as string,
-                  },
-                ]);
-              } catch (err) {
-                console.error("Failed to save search to Supabase:", err);
-              }
-            }}
-            className="mt-12 bg-white text-foreground rounded-2xl p-4 md:p-5 grid grid-cols-1 md:grid-cols-5 gap-3 shadow-2xl reveal"
-          >
-            <div className="md:col-span-2">
-              <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                Destination
-              </label>
-              <input
-                required
-                name="destination"
-                placeholder="Where to?"
-                className="w-full bg-muted/50 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                Check-in
-              </label>
-              <input
-                required
-                name="check_in"
-                type="date"
-                className="w-full bg-muted/50 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                Travellers
-              </label>
-              <select
-                name="travellers"
-                className="w-full bg-muted/50 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option>2 Adults</option>
-                <option>1 Adult</option>
-                <option>2 Adults, 1 Child</option>
-                <option>Family (4+)</option>
-              </select>
-            </div>
-            <button className="bg-primary hover:bg-[var(--primary-dark)] text-primary-foreground font-semibold rounded-lg px-5 py-2.5 mt-auto">
-              Search
-            </button>
-          </form>
-
-          {/* Slide Dots + Location Label */}
-          <div className="flex items-center gap-3 mt-8">
-            <span className="text-white/70 text-xs font-semibold tracking-wider uppercase">
-              📍 {heroSlides[heroSlide].label}
-            </span>
-            <div className="flex items-center gap-2 ml-auto">
-              {heroSlides.map((_, i) => (
-                <button
-                  key={i}
-                  aria-label={`Go to slide ${i + 1}`}
-                  className={`hero-dot${i === heroSlide ? " active" : ""}`}
-                  onClick={() => {
-                    setHeroSlide(i);
-                    heroPaused.current = false;
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero
+        heroSlides={heroSlides}
+        heroSlide={heroSlide}
+        setHeroSlide={setHeroSlide}
+        heroPaused={heroPaused}
+        scrollTo={scrollTo}
+        selectBookingCustom={selectBookingCustom}
+        setSearchQuery={setSearchQuery}
+        showToast={showToast}
+      />
 
       {/* Destinations */}
-      <section id="destinations" className="py-24 bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="text-center mb-14 reveal">
-            <p className="text-primary font-bold tracking-[0.2em] text-sm mb-3">DESTINATIONS</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold">Where will you go next?</h2>
-            <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-              Hand-picked destinations our travellers loved last season.
-            </p>
-          </div>
-          {searchQuery && (
-            <div className="flex items-center justify-between bg-primary/10 text-primary px-5 py-3 rounded-2xl mb-8 reveal in">
-              <span className="text-sm font-semibold">Showing results for "{searchQuery}"</span>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1.5 rounded-full hover:bg-[var(--primary-dark)] transition-colors"
-              >
-                Clear Search
-              </button>
-            </div>
-          )}
-
-          {displayedDestinations.length === 0 && displayedPackages.length === 0 && (
-            <div className="text-center py-16 bg-white rounded-3xl border border-dashed reveal in mb-8">
-              <span className="text-4xl block mb-2">🔍</span>
-              <p className="text-sm font-semibold text-muted-foreground">
-                No matches found for "{searchQuery}"
-              </p>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="text-xs font-bold text-primary underline mt-2 hover:no-underline"
-              >
-                Show all packages and destinations
-              </button>
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {displayedDestinations
-              .slice(0, showAllDestinations || searchQuery ? undefined : 8)
-              .map((d) => (
-                <article
-                  key={d.id || d.name}
-                  onClick={() => selectBookingCustomDestination(d.name)}
-                  className="reveal group relative rounded-2xl overflow-hidden bg-card shadow-sm hover:shadow-[var(--shadow-elegant)] transition-all cursor-pointer"
-                >
-                  <div className="aspect-[4/5] overflow-hidden">
-                    <img
-                      src={d.img}
-                      alt={`${d.name}, ${d.country}`}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent transition-opacity duration-300 group-hover:opacity-80" />
-                  <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                    <p className="text-xs uppercase tracking-wider opacity-80">{d.country}</p>
-                    <h3 className="text-xl font-bold">{d.name}</h3>
-                    <p className="mt-1 text-sm">
-                      <span className="opacity-80">from</span>{" "}
-                      <span className="text-primary font-bold">{d.price}</span>
-                    </p>
-                  </div>
-                </article>
-              ))}
-          </div>
-          {!searchQuery && displayedDestinations.length > 8 && (
-            <div className="text-center mt-12">
-              <button
-                onClick={() => setShowAllDestinations(!showAllDestinations)}
-                className="bg-primary hover:bg-[var(--primary-dark)] text-primary-foreground font-semibold px-8 py-3.5 rounded-full transition-colors shadow-lg cursor-pointer"
-              >
-                {showAllDestinations ? "Show Less" : "View More Destinations"}
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
+      <Destinations
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        displayedDestinations={displayedDestinations}
+        displayedPackages={displayedPackages}
+        showAllDestinations={showAllDestinations}
+        setShowAllDestinations={setShowAllDestinations}
+        selectBookingCustomDestination={selectBookingCustomDestination}
+      />
 
       {/* Packages */}
-      <section id="packages" className="py-24">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="flex flex-wrap items-end justify-between gap-4 mb-14 reveal">
-            <div>
-              <p className="text-primary font-bold tracking-[0.2em] text-sm mb-3">
-                FEATURED PACKAGES
-              </p>
-              <h2 className="text-4xl md:text-5xl font-extrabold">
-                Itineraries built for memories
-              </h2>
-            </div>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
-            {displayedPackages
-              .slice(0, showAllPackages ? undefined : FEATURED_PACKAGE_COUNT)
-              .map((p) => (
-                <article
-                  key={p.id || p.title}
-                  className="reveal bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-[var(--shadow-elegant)] transition-all border"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={p.img}
-                      alt={p.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                    />
-                    <span className="absolute top-4 left-4 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
-                      {p.tag}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <p className="text-xs text-muted-foreground font-semibold">{p.nights}</p>
-                    <h3 className="text-xl font-bold mt-1 mb-3">{p.title}</h3>
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {p.incl.map((i: string) => (
-                        <span
-                          key={i}
-                          className="text-xs bg-accent text-accent-foreground px-2.5 py-1 rounded-full"
-                        >
-                          {i}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex items-center justify-between pt-4 border-t">
-                      <div>
-                        <p className="text-xs text-muted-foreground">Starting from</p>
-                        <p className="text-2xl font-extrabold text-primary">{p.price}</p>
-                      </div>
-                      <button
-                        onClick={() => selectBookingPackage(p.title)}
-                        className="bg-foreground text-background hover:bg-primary text-sm font-semibold px-5 py-2.5 rounded-full transition-colors cursor-pointer"
-                      >
-                        Book Now
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-          </div>
-          {displayedPackages.length > FEATURED_PACKAGE_COUNT && (
-            <div className="text-center mt-12">
-              <button
-                onClick={() => setShowAllPackages(!showAllPackages)}
-                className="bg-primary hover:bg-[var(--primary-dark)] text-primary-foreground font-semibold px-8 py-3.5 rounded-full transition-colors shadow-lg cursor-pointer"
-              >
-                {showAllPackages ? "Show Less" : "View More Packages"}
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
+      <TrendingPackages
+        displayedPackages={displayedPackages}
+        searchQuery={searchQuery}
+        showAllPackages={showAllPackages}
+        setShowAllPackages={setShowAllPackages}
+        selectBookingPackage={selectBookingPackage}
+        FEATURED_PACKAGE_COUNT={FEATURED_PACKAGE_COUNT}
+      />
 
       {/* About / Why */}
       <section id="about" className="py-24 bg-accent/40">
@@ -1315,19 +1061,7 @@ function Index() {
       </section>
 
       {/* Stats */}
-      <section ref={statsRef} className="py-20 bg-primary text-primary-foreground">
-        <div className="mx-auto max-w-7xl px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {stats.map((s, i) => (
-            <div key={s.label}>
-              <p className="text-5xl md:text-6xl font-extrabold tabular-nums">
-                {s.float ? counts[i].toFixed(1) : counts[i].toLocaleString()}
-                {s.suffix}
-              </p>
-              <p className="mt-2 font-medium opacity-90">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <Statistics />
 
       {/* Gallery */}
       <section id="gallery" className="py-24">
@@ -1349,59 +1083,11 @@ function Index() {
         </div>
       </section>
 
-      {/* Visa Services */}
-      <section id="visa" className="py-24 bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="text-center mb-14 reveal">
-            <p className="text-primary font-bold tracking-[0.2em] text-sm mb-3">VISA SERVICES</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold">Hassle-Free Visa Assistance</h2>
-            <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-              We offer comprehensive documentation, filing, and tracking support for 40+ countries.
-            </p>
-          </div>
+      {/* Testimonials */}
+      <Testimonials />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {visaServices.map((v) => (
-              <div
-                key={v.country}
-                className="reveal bg-card border rounded-2xl p-6 shadow-sm hover:shadow-[var(--shadow-elegant)] transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold">{v.country}</h3>
-                    <span className="text-xs bg-primary/10 text-primary font-semibold px-2.5 py-1 rounded-full">
-                      {v.processingTime}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    <span className="font-semibold text-foreground">Type:</span> {v.type}
-                  </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    <span className="font-semibold text-foreground text-sm block mb-1">
-                      Key Requirements:
-                    </span>{" "}
-                    {v.requirement}
-                  </p>
-                </div>
-                <div className="flex items-center justify-between border-t pt-4 mt-6">
-                  <div>
-                    <p className="text-[10px] uppercase text-muted-foreground font-semibold">
-                      Service Fee Starts At
-                    </p>
-                    <p className="text-lg font-bold text-primary">{v.price}</p>
-                  </div>
-                  <button
-                    onClick={() => selectBookingVisa(v.country)}
-                    className="bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground text-xs font-semibold px-4 py-2 rounded-full transition-colors cursor-pointer"
-                  >
-                    Enquire Now
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Visa Services */}
+      <VisaServices selectBookingVisa={selectBookingVisa} data={visaServices} />
 
       {/* Blog */}
       <section id="blog" className="py-24">
@@ -1413,13 +1099,7 @@ function Index() {
                 Inspiration for your next adventure
               </h2>
             </div>
-            <a
-              href="#contact"
-              onClick={scrollTo("contact")}
-              className="text-primary font-semibold hover:underline"
-            >
-              View all posts →
-            </a>
+
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -1506,7 +1186,7 @@ function Index() {
               showToast("Sending your inquiry...");
 
               try {
-                const { error } = await supabase.from("contact_enquiries").insert([
+                const { error } = await supabase.from("general_inquiries").insert([
                   {
                     name,
                     phone: (fd.get("phone") as string) || "",
@@ -1586,154 +1266,9 @@ function Index() {
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="py-16 bg-accent/40">
-        <div className="mx-auto max-w-4xl px-4 text-center reveal">
-          <h3 className="text-3xl md:text-4xl font-extrabold mb-3">Get the best deals first.</h3>
-          <p className="text-muted-foreground mb-6">
-            Monthly travel inspiration and early-bird offers — no spam.
-          </p>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const form = e.currentTarget;
-              const fd = new FormData(form);
-              const email = fd.get("email") as string;
-              if (!email) return;
-
-              showToast("Subscribing...");
-
-              try {
-                const { error } = await supabase
-                  .from("newsletter_subscriptions")
-                  .insert([{ email }]);
-
-                if (error) {
-                  console.error("Supabase newsletter error:", error);
-                  setShowSubscribeSuccess(true);
-                  form.reset();
-                } else {
-                  setShowSubscribeSuccess(true);
-                  form.reset();
-                }
-              } catch (err) {
-                console.error("Failed to subscribe to Supabase:", err);
-                setShowSubscribeSuccess(true);
-                form.reset();
-              }
-            }}
-            className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto"
-          >
-            <input
-              required
-              name="email"
-              type="email"
-              placeholder="your@email.com"
-              className="flex-1 bg-white rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-primary"
-            />
-            <button className="bg-primary hover:bg-[var(--primary-dark)] text-primary-foreground font-semibold px-7 py-3 rounded-full transition-colors">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
 
       {/* Footer */}
-      <footer className="bg-[oklch(0.18_0.02_50)] text-white/80">
-        <div className="mx-auto max-w-7xl px-4 py-16 grid md:grid-cols-4 gap-10">
-          <div>
-            <div className="mb-4">
-              <img src="/logo.png" alt="LookMyHolidays" className="h-14 w-auto object-contain" />
-            </div>
-            <p className="text-sm mb-6">
-              Crafting holidays since 2011. Customized journeys, honest pricing, and people who
-              care.
-            </p>
-            <div className="flex items-center gap-4">
-              <a
-                href="https://www.facebook.com/lookmyholidaysjpr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.instagram.com/lookmyholidays_/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="https://youtube.com/@lookmyholidays7631?si=SuYkSXD-YWH-Xz0r"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                aria-label="YouTube"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              {[
-                "Home",
-                "Destinations",
-                "Packages",
-                "Visa",
-                "About",
-                "Gallery",
-                "Blog",
-                "Contact",
-              ].map((l) => (
-                <li key={l}>
-                  <a
-                    href={`#${l.toLowerCase()}`}
-                    onClick={scrollTo(l.toLowerCase())}
-                    className="hover:text-primary"
-                  >
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-4">Top Destinations</h4>
-            <ul className="space-y-2 text-sm">
-              {["Bali", "Maldives", "Dubai", "Switzerland", "Thailand"].map((l) => (
-                <li key={l}>
-                  <a
-                    href="#destinations"
-                    onClick={scrollTo("destinations")}
-                    className="hover:text-primary"
-                  >
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-4">Reach Us</h4>
-            <ul className="space-y-2 text-sm">
-              <li>FF-35, JTM Mall, Jagatpura, Jaipur, India</li>
-              <li>+91 95291 55562</li>
-              <li>resv@lookmyholidays.in</li>
-            </ul>
-          </div>
-        </div>
-        <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">
-          © {new Date().getFullYear()} LookMyHolidays. All rights reserved. | Created by Jatin
-          Jangid
-        </div>
-      </footer>
+      <Footer />
 
       {/* Floating WhatsApp */}
       <a
@@ -1799,11 +1334,10 @@ function Index() {
                   setShowPassword(false);
                   setAuthError("");
                 }}
-                className={`flex-1 py-3.5 text-sm font-bold transition-all relative cursor-pointer ${
-                  authTab === "signin"
+                className={`flex-1 py-3.5 text-sm font-bold transition-all relative cursor-pointer ${authTab === "signin"
                     ? "text-primary bg-white"
                     : "text-muted-foreground hover:text-foreground hover:bg-white/60"
-                }`}
+                  }`}
               >
                 Sign In
                 {authTab === "signin" && (
@@ -1817,11 +1351,10 @@ function Index() {
                   setShowPassword(false);
                   setAuthError("");
                 }}
-                className={`flex-1 py-3.5 text-sm font-bold transition-all relative cursor-pointer ${
-                  authTab === "signup"
+                className={`flex-1 py-3.5 text-sm font-bold transition-all relative cursor-pointer ${authTab === "signup"
                     ? "text-primary bg-white"
                     : "text-muted-foreground hover:text-foreground hover:bg-white/60"
-                }`}
+                  }`}
               >
                 Sign Up
                 {authTab === "signup" && (
@@ -1904,11 +1437,10 @@ function Index() {
                   <label className="flex items-center gap-2.5 cursor-pointer select-none group">
                     <div
                       onClick={() => setRememberMe(!rememberMe)}
-                      className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
-                        rememberMe
+                      className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${rememberMe
                           ? "bg-primary border-primary"
                           : "border-muted-foreground/40 hover:border-primary"
-                      }`}
+                        }`}
                     >
                       {rememberMe && <span className="text-white text-[10px] font-bold">✓</span>}
                     </div>
@@ -2068,11 +1600,10 @@ function Index() {
                   key={tab}
                   type="button"
                   onClick={() => setBookingModalTab(tab)}
-                  className={`py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
-                    bookingModalTab === tab
+                  className={`py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${bookingModalTab === tab
                       ? "bg-primary text-primary-foreground shadow"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   {tab === "custom" ? "🗺 Custom" : tab === "package" ? "📦 Package" : "🛂 Visa"}
                 </button>
