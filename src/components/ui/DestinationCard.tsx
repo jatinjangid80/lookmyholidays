@@ -107,8 +107,6 @@ export function DestinationCard({ dest, index, onSelect }: DestinationCardProps)
           <button 
             type="button"
             className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors"
-            onPointerDown={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
