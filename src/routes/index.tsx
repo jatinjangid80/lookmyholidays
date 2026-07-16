@@ -27,6 +27,7 @@ import {
   Heart,
   Settings,
   Package,
+  ChevronDown,
 } from "lucide-react";
 
 const jsonLd = {
@@ -810,18 +811,24 @@ function Index() {
               <div className="relative">
                 <button
                   onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}
-                  className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20 bg-primary text-primary-foreground font-bold flex items-center justify-center text-sm shadow hover:scale-105 transition-transform focus:outline-none cursor-pointer"
+                  className="hidden md:inline-flex items-center gap-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground pl-2 pr-4 py-1.5 rounded-full text-sm font-semibold transition-colors cursor-pointer"
                 >
-                  {user.user_metadata?.avatar_url ? (
-                    <img
-                      src={user.user_metadata.avatar_url}
-                      alt="User avatar"
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    user.email?.[0].toUpperCase()
-                  )}
+                  <div className="w-7 h-7 rounded-full overflow-hidden bg-primary text-primary-foreground font-bold flex items-center justify-center text-xs shrink-0">
+                    {user.user_metadata?.avatar_url ? (
+                      <img
+                        src={user.user_metadata.avatar_url}
+                        alt="User avatar"
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      user.email?.[0].toUpperCase()
+                    )}
+                  </div>
+                  <span className="max-w-[120px] truncate">
+                    {user.user_metadata?.full_name || user.email?.split("@")[0]}
+                  </span>
+                  <ChevronDown className="w-4 h-4 text-muted-foreground ml-[-2px]" />
                 </button>
                 {avatarMenuOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border p-1 z-50 text-sm animate-in fade-in slide-in-from-top-3 duration-200">
