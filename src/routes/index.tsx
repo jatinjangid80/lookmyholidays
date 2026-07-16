@@ -394,6 +394,7 @@ function Index() {
   const [user, setUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSavedTrips, setShowSavedTrips] = useState(false);
+  const [savedTripNames, setSavedTripNames] = useState<string[]>([]);
   const [authTab, setAuthTab] = useState<"signin" | "signup">("signin");
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
@@ -864,6 +865,8 @@ function Index() {
                     <button
                       onClick={() => {
                         setAvatarMenuOpen(false);
+                        const names = destinations.filter(d => localStorage.getItem(`favorite-${d.name}`) === 'true').map(d => d.name);
+                        setSavedTripNames(names);
                         setShowSavedTrips(true);
                       }}
                       className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 font-medium cursor-pointer"
@@ -997,6 +1000,8 @@ function Index() {
                     <button
                       onClick={() => {
                         setMenuOpen(false);
+                        const names = destinations.filter(d => localStorage.getItem(`favorite-${d.name}`) === 'true').map(d => d.name);
+                        setSavedTripNames(names);
                         setShowSavedTrips(true);
                       }}
                       className="w-full text-left py-2 px-2 font-medium text-foreground hover:bg-accent rounded-lg flex items-center gap-2.5 transition-colors cursor-pointer"
@@ -1550,12 +1555,7 @@ function Index() {
             </div>
             <div className="p-6 md:p-8 overflow-y-auto bg-gray-50/50 flex-1">
               {(() => {
-                const savedTrips = destinations.filter(d => {
-                  if (typeof window !== 'undefined') {
-                    return localStorage.getItem(`favorite-${d.name}`) === 'true';
-                  }
-                  return false;
-                });
+                const savedTrips = destinations.filter(d => savedTripNames.includes(d.name));
                 
                 if (savedTrips.length === 0) {
                   return (
@@ -1564,8 +1564,8 @@ function Index() {
                         <Heart className="w-12 h-12 text-red-300" />
                       </div>
                       <h3 className="text-xl font-bold mb-2">No saved trips yet</h3>
-                      <p className="text-muted-foreground max-w-sm mb-6">Hit the heart icon on any destination or package to save it to your wishlist and easily find it later.</p>
-                      <button onClick={() => setShowSavedTrips(false)} className="bg-primary text-primary-foreground px-6 py-2 rounded-full font-medium hover:opacity-90 transition-opacity">Explore destinations</button>
+                      <p className="text-muted-foreground max-w-sm mb-6">Hit the ❤️ heart on any destination card to save it here.</p>
+                      <button onClick={() => setShowSavedTrips(false)} className="bg-primary text-primary-foreground px-6 py-2 rounded-full font-medium hover:opacity-90 transition-opacity cursor-pointer">Explore destinations</button>
                     </div>
                   );
                 }
