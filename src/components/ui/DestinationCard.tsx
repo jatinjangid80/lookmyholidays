@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Heart } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface DestinationCardProps {
   dest: any;
@@ -10,7 +11,22 @@ interface DestinationCardProps {
 export function DestinationCard({ dest, index }: DestinationCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  
+  // Initialize favorite state from localStorage
+  const [isFavorite, setIsFavorite] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(`favorite-${dest.name}`);
+      return saved === 'true';
+    }
+    return false;
+  });
+
+  // Sync with localStorage when changed
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`favorite-${dest.name}`, String(isFavorite));
+    }
+  }, [isFavorite, dest.name]);
   
   // 3D Tilt Effect
   const x = useMotionValue(0);
@@ -81,7 +97,13 @@ export function DestinationCard({ dest, index }: DestinationCardProps) {
             className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:text-red-400 transition-colors"
             onClick={(e) => {
               e.stopPropagation();
-              setIsFavorite(!isFavorite);
+              const newState = !isFavorite;
+              setIsFavorite(newState);
+              if (newState) {
+                toast.success(`${dest.name} saved to wishlist!`);
+              } else {
+                toast.info(`${dest.name} removed from wishlist.`);
+              }
             }}
           >
             <motion.div animate={isFavorite ? { scale: [1, 1.5, 1] } : {}}>

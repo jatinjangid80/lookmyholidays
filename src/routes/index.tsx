@@ -29,6 +29,7 @@ import {
   Package,
   ChevronDown,
 } from "lucide-react";
+import { Toaster } from "sonner";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -768,6 +769,7 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Toaster position="bottom-right" richColors />
       {/* Header */}
       <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <header
