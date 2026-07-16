@@ -1573,7 +1573,15 @@ function Index() {
                 return (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pb-8">
                     {savedTrips.map((dest, i) => (
-                      <DestinationCard key={dest.name} dest={dest} index={i} />
+                      <DestinationCard 
+                        key={dest.name} 
+                        dest={dest} 
+                        index={i} 
+                        onSelect={(name) => {
+                          setShowSavedTrips(false);
+                          selectBookingCustomDestination(name);
+                        }}
+                      />
                     ))}
                   </div>
                 );
