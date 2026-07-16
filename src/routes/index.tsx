@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { hasSupabaseConfig, supabase } from "../lib/supabase";
+import { supabase, hasSupabaseConfig } from "../lib/supabase";
+import { DestinationCard } from "../components/ui/DestinationCard";
 import { Hero } from "../components/sections/Hero";
 import { Destinations } from "../components/sections/Destinations";
 import { Statistics } from "../components/sections/Statistics";
@@ -392,6 +393,7 @@ function Index() {
   // Authentication & Dashboard states
   const [user, setUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showSavedTrips, setShowSavedTrips] = useState(false);
   const [authTab, setAuthTab] = useState<"signin" | "signup">("signin");
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
@@ -862,6 +864,7 @@ function Index() {
                     <button
                       onClick={() => {
                         setAvatarMenuOpen(false);
+                        setShowSavedTrips(true);
                       }}
                       className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 font-medium cursor-pointer"
                     >
@@ -994,6 +997,7 @@ function Index() {
                     <button
                       onClick={() => {
                         setMenuOpen(false);
+                        setShowSavedTrips(true);
                       }}
                       className="w-full text-left py-2 px-2 font-medium text-foreground hover:bg-accent rounded-lg flex items-center gap-2.5 transition-colors cursor-pointer"
                     >
@@ -1529,6 +1533,51 @@ function Index() {
                   <span>{googleLoading ? "Connecting to Google..." : "Continue with Google"}</span>
                 </button>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Saved Trips Modal */}
+      {showSavedTrips && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl relative border animate-in zoom-in-95 duration-200 overflow-hidden">
+            <div className="px-6 py-5 border-b flex items-center justify-between bg-white z-10 sticky top-0 shadow-sm">
+              <h2 className="text-2xl font-bold flex items-center gap-3"><Heart className="w-6 h-6 text-red-500 fill-red-500" /> Saved Trips</h2>
+              <button onClick={() => setShowSavedTrips(false)} className="text-muted-foreground hover:bg-muted p-2 rounded-full transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+            <div className="p-6 md:p-8 overflow-y-auto bg-gray-50/50 flex-1">
+              {(() => {
+                const savedTrips = destinations.filter(d => {
+                  if (typeof window !== 'undefined') {
+                    return localStorage.getItem(`favorite-${d.name}`) === 'true';
+                  }
+                  return false;
+                });
+                
+                if (savedTrips.length === 0) {
+                  return (
+                    <div className="text-center py-20 flex flex-col items-center justify-center">
+                      <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6">
+                        <Heart className="w-12 h-12 text-red-300" />
+                      </div>
+                      <h3 className="text-xl font-bold mb-2">No saved trips yet</h3>
+                      <p className="text-muted-foreground max-w-sm mb-6">Hit the heart icon on any destination or package to save it to your wishlist and easily find it later.</p>
+                      <button onClick={() => setShowSavedTrips(false)} className="bg-primary text-primary-foreground px-6 py-2 rounded-full font-medium hover:opacity-90 transition-opacity">Explore destinations</button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pb-8">
+                    {savedTrips.map((dest, i) => (
+                      <DestinationCard key={dest.name} dest={dest} index={i} />
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
