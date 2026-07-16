@@ -94,8 +94,12 @@ export function DestinationCard({ dest, index }: DestinationCardProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/80 transition-opacity duration-300 group-hover:opacity-90" />
           
           <button 
+            type="button"
             className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:text-red-400 transition-colors"
+            onPointerDown={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               const newState = !isFavorite;
               setIsFavorite(newState);

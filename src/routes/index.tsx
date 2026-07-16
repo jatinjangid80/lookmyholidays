@@ -248,9 +248,9 @@ export const packages = [
 ];
 
 const stats = [
-  { n: 12500, label: "Happy Travellers", suffix: "+" },
-  { n: 85, label: "Destinations Covered", suffix: "+" },
-  { n: 14, label: "Years of Experience", suffix: "" },
+  { n: 1500, label: "Happy Travellers", suffix: "+" },
+  { n: 90, label: "Destinations Covered", suffix: "+" },
+  { n: 15, label: "Years of Experience", suffix: "" },
   { n: 4.9, label: "Average Rating", suffix: "/5", float: true },
 ];
 
