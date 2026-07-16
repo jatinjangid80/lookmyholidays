@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { DestinationCard } from '../ui/DestinationCard';
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 interface DestinationsProps {
   searchQuery: string;
@@ -90,12 +91,12 @@ export function Destinations({
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <button
-              onClick={() => setShowAllDestinations(!showAllDestinations)}
+            <Link
+              to="/destinations"
               className="text-[#ff6200] hover:text-[#e65800] no-underline font-bold text-sm transition-all duration-300 flex items-center gap-2 cursor-pointer group"
             >
-              {showAllDestinations ? "View Less" : "View All Destinations"} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+              View All Destinations <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </motion.div>
         )}
       </div>

@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const stats = [
-  { n: 12500, label: "Happy Travellers", suffix: "+" },
-  { n: 85, label: "Destinations Covered", suffix: "+" },
-  { n: 14, label: "Years of Experience", suffix: "" },
+  { n: 15000, label: "Happy Travellers", suffix: "+" },
+  { n: 90, label: "Destinations Covered", suffix: "+" },
+  { n: 18, label: "Years of Experience", suffix: "" },
   { n: 4.9, label: "Average Rating", suffix: "/5", float: true },
 ];
 
@@ -38,21 +38,7 @@ function Counter({ n, float, suffix }: { n: number; float?: boolean; suffix: str
 
 export function Statistics() {
   return (
-    <section className="py-8 bg-primary text-primary-foreground relative overflow-hidden">
-      {/* Decorative animated rings */}
-      <motion.div 
-        className="absolute top-1/2 left-10 w-96 h-96 border border-white/10 rounded-full"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        style={{ y: "-50%" }}
-      />
-      <motion.div 
-        className="absolute top-1/2 right-10 w-[500px] h-[500px] border border-white/10 rounded-full"
-        animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.4, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: 1 }}
-        style={{ y: "-50%" }}
-      />
-
+    <section className="py-8 bg-transparent relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
         {stats.map((s, i) => (
           <motion.div 
@@ -62,10 +48,10 @@ export function Statistics() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ delay: i * 0.1, duration: 0.6 }}
           >
-            <p className="text-5xl md:text-6xl font-extrabold tabular-nums">
+            <p className="text-5xl md:text-6xl font-extrabold tabular-nums text-primary">
               <Counter n={s.n} float={s.float} suffix={s.suffix} />
             </p>
-            <p className="mt-2 font-medium opacity-90">{s.label}</p>
+            <p className="mt-2 font-medium text-muted-foreground">{s.label}</p>
           </motion.div>
         ))}
       </div>

@@ -61,15 +61,7 @@ export function VisaServices({ selectBookingVisa, data = [] }: VisaServicesProps
 
               <hr className="border-border/50 mb-6" />
 
-              <div className="flex flex-wrap items-end justify-between gap-4 mt-auto">
-                <div>
-                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold mb-1">
-                    SERVICE FEE STARTS AT
-                  </div>
-                  <div className="text-xl font-bold text-[#ff6200]">
-                    {item.price}
-                  </div>
-                </div>
+              <div className="flex justify-center mt-auto">
                 <button
                   onClick={() => selectBookingVisa(`${item.country} (${item.type})`)}
                   className="bg-[#ff6200]/10 hover:bg-[#ff6200]/20 text-[#ff6200] font-bold px-5 py-2.5 rounded-full transition-colors text-sm cursor-pointer whitespace-nowrap"

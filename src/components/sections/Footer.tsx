@@ -104,7 +104,7 @@ export function Footer() {
             <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-primary rounded-full"></span>
           </h4>
           <ul className="space-y-3 text-sm">
-            {["Home", "Destinations", "Packages", "Visa", "About", "Gallery", "Contact"].map((l) => (
+            {["Home", "Destinations", "Packages", "Visa", "Gallery", "Contact"].map((l) => (
               <li key={l}>
                 <a
                   href={`#${l.toLowerCase()}`}

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const FEATURED_PACKAGE_COUNT = 6;
 
@@ -93,12 +94,12 @@ export function TrendingPackages({
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <button
-              onClick={() => setShowAllPackages(!showAllPackages)}
+            <Link
+              to="/packages"
               className="text-[#ff6200] hover:text-[#e65800] no-underline font-bold text-sm transition-all duration-300 flex items-center gap-2 cursor-pointer group outline-none focus:outline-none"
             >
-              {showAllPackages ? "View Less" : "View All Packages"} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+              View All Packages <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </motion.div>
         )}
       </div>

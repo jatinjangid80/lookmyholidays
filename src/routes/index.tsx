@@ -8,6 +8,7 @@ import { Testimonials } from "../components/sections/Testimonials";
 import { VisaServices } from "../components/sections/VisaServices";
 import { Footer } from "../components/sections/Footer";
 import { TrendingPackages } from "../components/sections/TrendingPackages";
+import { FAQ } from "../components/sections/FAQ";
 import {
   Mail,
   Lock,
@@ -82,7 +83,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const destinations = [
+export const destinations = [
   {
     name: "Bali",
     country: "Indonesia",
@@ -157,7 +158,7 @@ const destinations = [
   },
 ];
 
-const packages = [
+export const packages = [
   {
     title: "Dubai City + Desert",
     nights: "5N / 6D",
@@ -786,7 +787,6 @@ function Index() {
               "destinations",
               "packages",
               "visa",
-              "about",
               "gallery",
               "blog",
               "contact",
@@ -891,7 +891,6 @@ function Index() {
                 "destinations",
                 "packages",
                 "visa",
-                "about",
                 "gallery",
                 "blog",
                 "contact",
@@ -1007,58 +1006,7 @@ function Index() {
         FEATURED_PACKAGE_COUNT={FEATURED_PACKAGE_COUNT}
       />
 
-      {/* About / Why */}
-      <section id="about" className="py-24 bg-accent/40">
-        <div className="mx-auto max-w-7xl px-4 grid lg:grid-cols-2 gap-14 items-center">
-          <div className="reveal relative">
-            <img
-              src="https://images.unsplash.com/photo-1488085061387-422e29b40080?w=900&q=80"
-              alt="Happy travellers exploring"
-              className="rounded-3xl shadow-[var(--shadow-elegant)]"
-            />
-            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl hidden md:block">
-              <p className="text-4xl font-extrabold text-primary">14+</p>
-              <p className="text-sm text-muted-foreground font-medium">Years curating trips</p>
-            </div>
-          </div>
-          <div className="reveal">
-            <p className="text-primary font-bold tracking-[0.2em] text-sm mb-3">
-              WHY LOOKMYHOLIDAYS
-            </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-5">
-              Travel partners, not just bookers.
-            </h2>
-            <p className="text-muted-foreground text-lg mb-7">
-              From visa stamps to villa upgrades, we sweat the small stuff so your trip is
-              effortless from the moment you say "yes" to the journey home.
-            </p>
-            <ul className="space-y-4">
-              {[
-                [
-                  "Tailor-made itineraries",
-                  "No cookie-cutter trips — every plan starts from a real conversation.",
-                ],
-                ["24/7 on-trip support", "Real humans on WhatsApp, every time zone, every day."],
-                [
-                  "Best-price guarantee",
-                  "Tight relationships with hotels and airlines mean better rates for you.",
-                ],
-                ["Visa & documentation", "End-to-end visa support for 40+ countries."],
-              ].map(([t, d]) => (
-                <li key={t} className="flex gap-4">
-                  <span className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center font-bold">
-                    ✓
-                  </span>
-                  <div>
-                    <h4 className="font-bold">{t}</h4>
-                    <p className="text-muted-foreground text-sm">{d}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+
 
       {/* Stats */}
       <Statistics />
@@ -1266,6 +1214,8 @@ function Index() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* Footer */}
       <Footer />
@@ -1314,7 +1264,7 @@ function Index() {
               >
                 ✕
               </button>
-              <div className="text-4xl mb-2">✈️</div>
+              <div className="text-4xl mb-2 animate-float">✈️</div>
               <h2 className="text-xl font-extrabold">
                 {authTab === "signin" ? "Welcome Back!" : "Join LookMyHolidays"}
               </h2>
@@ -1478,7 +1428,7 @@ function Index() {
                   type="button"
                   disabled={authLoading || googleLoading}
                   onClick={handleGoogleSignIn}
-                  className="w-full flex items-center justify-center gap-3 border hover:bg-accent text-foreground font-semibold py-3 rounded-full transition-all shadow-sm cursor-pointer disabled:opacity-70 hover:shadow"
+                  className="w-full h-[64px] flex items-center justify-center gap-3 bg-white border border-border/50 hover:bg-gray-50 text-gray-800 font-semibold rounded-full transition-all shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer disabled:opacity-70"
                 >
                   {googleLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin text-primary" />
