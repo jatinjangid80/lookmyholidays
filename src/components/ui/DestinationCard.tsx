@@ -6,9 +6,10 @@ import { toast } from 'sonner';
 interface DestinationCardProps {
   dest: any;
   index: number;
+  onSelect?: (name: string) => void;
 }
 
-export function DestinationCard({ dest, index }: DestinationCardProps) {
+export function DestinationCard({ dest, index, onSelect }: DestinationCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   
@@ -56,6 +57,15 @@ export function DestinationCard({ dest, index }: DestinationCardProps) {
     y.set(0);
   };
 
+  // Handle card body click — only triggers if the heart was NOT clicked
+  const handleCardClick = () => {
+    if (onSelect) {
+      onSelect(dest.name);
+    } else {
+      setIsFlipped(!isFlipped);
+    }
+  };
+
   return (
     <motion.div
       className="relative w-full aspect-[4/5] rounded-2xl cursor-pointer perspective-1000 z-10"
@@ -69,7 +79,7 @@ export function DestinationCard({ dest, index }: DestinationCardProps) {
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onClick={() => setIsFlipped(!isFlipped)}
+        onClick={handleCardClick}
         style={{
           rotateX,
           rotateY,
@@ -93,9 +103,10 @@ export function DestinationCard({ dest, index }: DestinationCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/80 transition-opacity duration-300 group-hover:opacity-90" />
           
+          {/* Heart / Wishlist button — completely isolated from card click */}
           <button 
             type="button"
-            className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:text-red-400 transition-colors"
+            className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors"
             onPointerDown={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => {
@@ -104,14 +115,14 @@ export function DestinationCard({ dest, index }: DestinationCardProps) {
               const newState = !isFavorite;
               setIsFavorite(newState);
               if (newState) {
-                toast.success(`${dest.name} saved to wishlist!`);
+                toast.success(`${dest.name} saved to wishlist! ❤️`);
               } else {
                 toast.info(`${dest.name} removed from wishlist.`);
               }
             }}
           >
             <motion.div animate={isFavorite ? { scale: [1, 1.5, 1] } : {}}>
-              <Heart className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+              <Heart className={`w-5 h-5 transition-colors ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white'}`} />
             </motion.div>
           </button>
 

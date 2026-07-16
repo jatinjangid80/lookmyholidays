@@ -78,9 +78,12 @@ export function Destinations({
           {displayedDestinations
             .slice(0, showAllDestinations || searchQuery ? undefined : 8)
             .map((d, i) => (
-              <div key={d.id || d.name} onClick={() => selectBookingCustomDestination(d.name)}>
-                <DestinationCard dest={d} index={i} />
-              </div>
+              <DestinationCard
+                key={d.id || d.name}
+                dest={d}
+                index={i}
+                onSelect={(name) => selectBookingCustomDestination(name)}
+              />
             ))}
         </div>
 
