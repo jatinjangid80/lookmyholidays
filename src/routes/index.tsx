@@ -24,6 +24,9 @@ import {
   Facebook,
   Instagram,
   Youtube,
+  Heart,
+  Settings,
+  Package,
 } from "lucide-react";
 
 const jsonLd = {
@@ -831,13 +834,41 @@ function Index() {
                     <button
                       onClick={() => {
                         setAvatarMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 font-medium cursor-pointer"
+                    >
+                      <User className="w-4 h-4 text-muted-foreground" />
+                      My Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        setAvatarMenuOpen(false);
                         setShowEnquiries(true);
                       }}
                       className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 font-medium cursor-pointer"
                     >
-                      <History className="w-4 h-4 text-muted-foreground" />
-                      My Enquiries
+                      <Package className="w-4 h-4 text-muted-foreground" />
+                      My Bookings
                     </button>
+                    <button
+                      onClick={() => {
+                        setAvatarMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 font-medium cursor-pointer"
+                    >
+                      <Heart className="w-4 h-4 text-muted-foreground" />
+                      Saved Trips
+                    </button>
+                    <button
+                      onClick={() => {
+                        setAvatarMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 font-medium cursor-pointer"
+                    >
+                      <Settings className="w-4 h-4 text-muted-foreground" />
+                      Settings
+                    </button>
+                    <div className="h-px bg-border my-1" />
                     <button
                       onClick={() => {
                         setAvatarMenuOpen(false);
@@ -846,7 +877,7 @@ function Index() {
                       className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-destructive/10 text-destructive transition-colors flex items-center gap-2 font-medium cursor-pointer"
                     >
                       <LogOut className="w-4 h-4" />
-                      Sign Out
+                      Logout
                     </button>
                   </div>
                 )}
@@ -931,14 +962,48 @@ function Index() {
                     <button
                       onClick={() => {
                         setMenuOpen(false);
+                      }}
+                      className="w-full text-left py-2 px-2 font-medium text-foreground hover:bg-accent rounded-lg flex items-center gap-2.5 transition-colors cursor-pointer"
+                    >
+                      <User className="w-4 h-4 text-muted-foreground" />
+                      My Profile
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
                         setShowEnquiries(true);
                       }}
                       className="w-full text-left py-2 px-2 font-medium text-foreground hover:bg-accent rounded-lg flex items-center gap-2.5 transition-colors cursor-pointer"
                     >
-                      <History className="w-4 h-4 text-muted-foreground" />
-                      My Enquiries
+                      <Package className="w-4 h-4 text-muted-foreground" />
+                      My Bookings
                     </button>
                   </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                      }}
+                      className="w-full text-left py-2 px-2 font-medium text-foreground hover:bg-accent rounded-lg flex items-center gap-2.5 transition-colors cursor-pointer"
+                    >
+                      <Heart className="w-4 h-4 text-muted-foreground" />
+                      Saved Trips
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                      }}
+                      className="w-full text-left py-2 px-2 font-medium text-foreground hover:bg-accent rounded-lg flex items-center gap-2.5 transition-colors cursor-pointer"
+                    >
+                      <Settings className="w-4 h-4 text-muted-foreground" />
+                      Settings
+                    </button>
+                  </li>
+                  <li className="my-1 border-t border-border"></li>
                   <li>
                     <button
                       onClick={() => {
@@ -948,7 +1013,7 @@ function Index() {
                       className="w-full text-left py-2 px-2 font-medium text-destructive hover:bg-destructive/5 rounded-lg flex items-center gap-2.5 transition-colors cursor-pointer"
                     >
                       <LogOut className="w-4 h-4" />
-                      Sign Out
+                      Logout
                     </button>
                   </li>
                 </>
